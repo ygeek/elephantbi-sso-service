@@ -55,13 +55,15 @@ def login_wx_user(auth_code, redirect_url, env):
         access_token = jwt_encoder(user).decode('utf-8')
         logger.info('access_token: %s', access_token)
 
-        response = redirect(redirect_url)
         domain = flask_app.config['SERVER_DOMAIN']
+        logger.info('domain: %s', domain)
         cookie_domain = '.%s' % domain
-        response.set_cookie('BI_TOKEN', access_token, domain=cookie_domain)
-        response.set_cookie('BI_CORP_ID', wx_corp_id, domain=cookie_domain)
 
-        return response
+    response = redirect(redirect_url)
+    response.set_cookie('BI_TOKEN', access_token, domain=cookie_domain)
+    response.set_cookie('BI_CORP_ID', wx_corp_id, domain=cookie_domain)
+
+    return response
 
 
 def get_user_login_info(auth_code):
