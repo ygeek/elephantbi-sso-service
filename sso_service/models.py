@@ -47,3 +47,21 @@ class WxUser(db.Model):
             uselist=False
         )
     )
+
+
+class WxCorp(db.Model):
+    __tablename__ = 'wx_corp'
+
+    id = db.Column(db.String(100), primary_key=True)
+    perm_code = db.Column(db.String(100), nullable=False)
+    company_id = db.Column(db.Integer)
+    auth_cancelled = db.Column(
+        db.SmallInteger,
+        nullable=False,
+        default=0,
+        server_default='0'
+    )
+    agent_id = db.Column(db.String(100), nullable=False, server_default='0')
+    new_installation = db.Column(db.SmallInteger, nullable=False, default=1)
+    status = db.Column(db.SmallInteger, nullable=False, default=0,
+                       server_default='1')

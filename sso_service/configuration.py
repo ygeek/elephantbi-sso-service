@@ -44,7 +44,7 @@ def get_db_uri(env='develop'):
 
 class BaseConfig:
     # Builtin Configuration
-    SERVER_NAME = os.getenv('SERVER_NAME')
+    # SERVER_NAME = os.getenv('SERVER_NAME')
 
     # Flask-JWT
     SECRET_KEY = os.getenv('SECRET_KEY')

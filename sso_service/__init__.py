@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_jwt import JWT
 from flask_sqlalchemy import SQLAlchemy
 
 # Flask extensions
@@ -18,6 +19,10 @@ def create_app(config):
 
     # Initialize database connection
     db.init_app(app)
+
+    # JWT
+    from sso_service.app_setup import Auth
+    JWT(app, Auth.authenticate, Auth.identity)
 
     # Register blueprints
     from sso_service.handlers.sso import sso_bp

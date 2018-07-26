@@ -8,3 +8,5 @@ SQLAlchemy==1.2.6
 Flask-SQLAlchemy==2.3.1
 Flask-JWT==0.3.2
 requests==2.18.4
+psycopg2-binary==2.7.4
+Werkzeug==0.14.1
