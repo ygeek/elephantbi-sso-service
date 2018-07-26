@@ -59,6 +59,7 @@ def login_wx_user(auth_code, redirect_url, env):
         domain = flask_app.config['SERVER_DOMAIN']
         cookie_domain = '.%s' % domain
         response.set_cookie('BI_TOKEN', access_token, domain=cookie_domain)
+        response.set_cookie('BI_CORP_ID', wx_corp_id, domain=cookie_domain)
 
         return response
 
