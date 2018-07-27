@@ -1,4 +1,3 @@
-from flask import redirect
 from flask_jwt import _default_jwt_encode_handler as jwt_encoder
 
 from sso_service import create_app
@@ -7,12 +6,11 @@ from sso_service.logger import config_logger
 from sso_service.models import WxUser, WxCorp, User
 from sso_service.utils.wx_api import WxAPI
 
-logger = config_logger(__name__, 'info', 'wx.log')
+logger = config_logger(__name__, 'info', 'sso.log')
 
 
-def login_wx_user(auth_code, redirect_url, env):
-    logger.info('[login_wx_user] auth_code: %s, redirect_url: %s, env: %s',
-                auth_code, redirect_url, env)
+def login_wx_user(auth_code, env):
+    logger.info('[login_wx_user] auth_code: %s, env: %s', auth_code, env)
 
     # Map env:
     # env = {
@@ -55,15 +53,7 @@ def login_wx_user(auth_code, redirect_url, env):
         access_token = jwt_encoder(user).decode('utf-8')
         logger.info('access_token: %s', access_token)
 
-        domain = flask_app.config['SERVER_DOMAIN']
-        logger.info('domain: %s', domain)
-        cookie_domain = '.%s' % domain
-
-    response = redirect(redirect_url)
-    response.set_cookie('BI_TOKEN', access_token, domain=cookie_domain)
-    response.set_cookie('BI_CORP_ID', wx_corp_id, domain=cookie_domain)
-
-    return response
+    return access_token, wx_corp_id
 
 
 def get_user_login_info(auth_code):

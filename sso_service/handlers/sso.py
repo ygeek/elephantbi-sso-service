@@ -26,12 +26,6 @@ sso_parser.add_argument(
     location='args'
 )
 sso_parser.add_argument(
-    'redirect_url',
-    type=str,
-    required=True,
-    location='args'
-)
-sso_parser.add_argument(
     'env',
     type=str,
     required=True,
@@ -61,12 +55,16 @@ class SSOHandler(Resource):
 
         # Params:
         auth_code = args['auth_code']
-        redirect_url = args['redirect_url']
         env = args['env']
 
-        resp = login_wx_user(auth_code, redirect_url, env)
+        access_token, wx_corp_id = login_wx_user(auth_code, env)
 
-        return resp
+        response = {
+            'corp_id': wx_corp_id,
+            'access_token': access_token
+        }
+
+        return response
 
 
 api.add_resource(WxRedirectHandler, '/wx/redirect')
