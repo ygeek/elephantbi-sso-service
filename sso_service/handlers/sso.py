@@ -59,9 +59,16 @@ class SSOHandler(Resource):
 
         access_token, wx_corp_id = login_wx_user(auth_code, env)
 
+        redirect_url = {
+            'develop': 'wx.flexceed.com',
+            'stage': 'wx.visionpsn.com',
+            'product': 'wx.elephantbi.com',
+        }.get(env)
+
         response = {
             'corp_id': wx_corp_id,
-            'access_token': access_token
+            'access_token': access_token,
+            'redirect_url': redirect_url
         }
 
         return response
