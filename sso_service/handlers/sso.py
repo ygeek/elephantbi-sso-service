@@ -62,7 +62,7 @@ class SSOHandler(Resource):
         redirect_url = {
             'develop': 'wx.flexceed.com',
             'stage': 'wx.visionpsn.com',
-            'product': 'wx.elephantbi.com',
+            'production': 'wx.elephantbi.com',
         }.get(env)
 
         response = {
