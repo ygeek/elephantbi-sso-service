@@ -19,6 +19,13 @@ def login_wx_user(auth_code, env):
     #     'prod': 'production',
     # }.get(env)
 
+    data = {
+        'access_token': None,
+        'corp_id': None,
+        'err_code': '0',
+        'err_msg': 'success',
+    }
+
     # Create a flask  app instance
     flask_app = create_app(get_config(env))
     with flask_app.app_context():
@@ -27,16 +34,29 @@ def login_wx_user(auth_code, env):
         wx_corp_id = login_info.get('corp_info', {}).get('corpid')
         if wx_user_id is None:
             logger.error('wx_user_id is None')
-            return None
+            data.update({
+                'err_code': '-2',
+                'err_msg': 'wx_user_id is null'
+            })
+            return data
 
         if wx_corp_id is None:
             logger.error('wx_corp_id is None')
-            return None
+            data.update({
+                'err_code': '-3',
+                'err_msg': 'wx_corp_id is null'
+            })
+            return data
 
         wx_corp = WxCorp.query.filter(WxCorp.id == wx_corp_id).first()
         if wx_corp is None:
+            # Will redirect user to app installation link
             logger.error('wx_corp is None')
-            return None
+            data.update({
+                'err_code': '-1',
+                'err_msg': 'wx_corp is null'
+            })
+            return data
 
         user = User.query.join(
             WxUser,
@@ -48,12 +68,20 @@ def login_wx_user(auth_code, env):
 
         if user is None:
             logger.error('user is None')
+            data.update({
+                'err_code': '-4',
+                'err_msg': 'user is null'
+            })
             return None
 
         access_token = jwt_encoder(user).decode('utf-8')
         logger.info('access_token: %s', access_token)
+        data.update({
+            'access_token': access_token,
+            'corp_id': wx_corp_id
+        })
 
-    return access_token, wx_corp_id
+    return data
 
 
 def get_user_login_info(auth_code):

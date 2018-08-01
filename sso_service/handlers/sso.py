@@ -57,7 +57,8 @@ class SSOHandler(Resource):
         auth_code = args['auth_code']
         env = args['env']
 
-        access_token, wx_corp_id = login_wx_user(auth_code, env)
+        data = login_wx_user(auth_code, env)
+        logger.info('[SSOHandler] GET data: %s', data)
 
         redirect_url = {
             'develop': 'wx.flexceed.com',
@@ -66,8 +67,7 @@ class SSOHandler(Resource):
         }.get(env)
 
         response = {
-            'corp_id': wx_corp_id,
-            'access_token': access_token,
+            **data,
             'redirect_url': redirect_url
         }
 
